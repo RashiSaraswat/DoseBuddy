@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect, jsonify, url_for
 import mysql.connector
 from logic import check_conflicts
 from datetime import datetime 
@@ -6,6 +6,9 @@ from datetime import datetime
 app = Flask(__name__)
 
 
+# ---------------------------------------------------
+# DATABASE CONNECTION
+# ---------------------------------------------------
 def connect_db():
     return mysql.connector.connect(
         host="localhost",
@@ -16,60 +19,52 @@ def connect_db():
 
 
 # ---------------------------------------------------
-# 🟢 HOME ROUTE (Working)
+# 🟢 DASHBOARD ROUTE (MAIN PAGE)
 # ---------------------------------------------------
-@app.route('/')
-def home():
-
+@app.route("/")
+@app.route("/dashboard")
+def dashboard():
     db = connect_db()
     cursor = db.cursor(dictionary=True)
 
-    # If your table "sample" doesn't exist, create it or remove this query
-    try:
-        cursor.execute("SELECT message FROM sample LIMIT 1")
-        result = cursor.fetchone()
-        message = result["message"] if result else "Welcome!"
-    except:
-        message = "Welcome!"
+    cursor.execute("SELECT * FROM medicines ORDER BY time ASC")
+    meds = cursor.fetchall()
 
     cursor.close()
     db.close()
 
-    return render_template("index.html", message=message)
+    return render_template("index.html", medicines=meds)
+
 
 
 # ---------------------------------------------------
-# 🟢 ADD MEDICINE
+# 🟢 ADD MEDICINE (Modal)
 # ---------------------------------------------------
-@app.route("/add", methods=["GET", "POST"])
+@app.route("/add", methods=["POST"])
 def add():
+    name = request.form["name"]
+    dosage = request.form["dosage"]
+    time = request.form["time"]
+    food = request.form["food"]
 
-    if request.method == "POST":
-        name = request.form["name"]
-        dosage = request.form["dosage"]
-        time = request.form["time"]
-        food = request.form["food"]
+    db = connect_db()
+    cursor = db.cursor(dictionary=True)
 
-        db = connect_db()
-        cursor = db.cursor(dictionary=True)
+    cursor.execute(
+        "INSERT INTO medicines(name, dosage, time, food_type) VALUES (%s, %s, %s, %s)",
+        (name, dosage, time, food)
+    )
+    db.commit()
 
-        cursor.execute(
-            "INSERT INTO medicines(name, dosage, time, food_type) VALUES (%s, %s, %s, %s)",
-            (name, dosage, time, food)
-        )
-        db.commit()
+    cursor.close()
+    db.close()
 
-        cursor.close()
-        db.close()
+    return redirect(url_for("dashboard"))
 
-        warning = check_conflicts(name, time, food)
-        return render_template("success.html", warning=warning)
-
-    return render_template("add.html")
 
 
 # ---------------------------------------------------
-# 🟢 GET ALL MEDICINES (for JS)
+# 🟢 GET ALL MEDICINES (JS Fetch API)
 # ---------------------------------------------------
 @app.route("/get_medicines")
 def get_medicines():
@@ -85,44 +80,39 @@ def get_medicines():
     return jsonify(data)
 
 
+
 # ---------------------------------------------------
-# 🟢 EDIT MEDICINE
+# 🟢 EDIT MEDICINE (Modal)
 # ---------------------------------------------------
-@app.route("/edit/<int:id>", methods=["GET", "POST"])
+@app.route("/edit/<int:id>", methods=["POST"])
 def edit(id):
+    name = request.form["name"]
+    dosage = request.form["dosage"]
+    time = request.form["time"]
+    food = request.form["food"]
 
     db = connect_db()
     cursor = db.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM medicines WHERE id=%s", (id,))
-    med = cursor.fetchone()
-
-    if request.method == "POST":
-        name = request.form["name"]
-        dosage = request.form["dosage"]
-        time = request.form["time"]
-        food = request.form["food"]
-
-        cursor.execute(
-            "UPDATE medicines SET name=%s, dosage=%s, time=%s, food_type=%s WHERE id=%s",
-            (name, dosage, time, food, id)
-        )
-        db.commit()
-
-        cursor.close()
-        db.close()
-        return redirect("/")
+    cursor.execute(
+        "UPDATE medicines SET name=%s, dosage=%s, time=%s, food_type=%s WHERE id=%s",
+        (name, dosage, time, food, id)
+    )
+    db.commit()
 
     cursor.close()
     db.close()
-    return render_template("edit.html", med=med)
+
+    return redirect(url_for("dashboard"))
+
 
 
 # ---------------------------------------------------
-# 🟢 DELETE MEDICINE
+# 🟢 DELETE MEDICINE (Modal, POST ONLY)
 # ---------------------------------------------------
-@app.route("/delete/<int:id>")
+@app.route("/delete/<int:id>", methods=["POST"])
 def delete(id):
+
     db = connect_db()
     cursor = db.cursor(dictionary=True)
 
@@ -132,7 +122,19 @@ def delete(id):
     cursor.close()
     db.close()
 
-    return redirect("/")
+    return redirect(url_for("dashboard"))
+@app.route("/mark_taken/<int:id>", methods=["POST"])
+def mark_taken(id):
+    db = connect_db()
+    cursor = db.cursor()
+
+    cursor.execute("UPDATE medicines SET status='taken' WHERE id=%s", (id,))
+    db.commit()
+
+    cursor.close()
+    db.close()
+    return jsonify({"success": True})
+
 
 
 # ---------------------------------------------------

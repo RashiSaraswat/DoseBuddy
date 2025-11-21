@@ -11,208 +11,503 @@
       --primary:#2463ea; --accent:#00c2a8; --green-soft:#d9f7e3;
       --red-soft:#ffe5e8; --card-radius:12px; --soft-shadow:0 8px 28px rgba(16,24,40,0.06);
       --outline:1px solid rgba(15,23,36,0.04); --badge-bg:#10b981; --text:#0f1724;
+      --glass-bg: rgba(255,255,255,0.55); /* for light glass */
+      --glass-border: rgba(255,255,255,0.6);
+      --icon-color: #333;
     }
-    body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+
+    /* Dark mode variables */
+    body.dark {
+      --icon-color: #fff; 
+      --bg: #0b1220;
+      --surface: rgba(8,18,36,0.6);
+      --muted: #94a3b8;
+      --primary: #5da9ff;
+      --accent: #00d6b6;
+      --text: #e6eef8;
+      --soft-shadow: 0 8px 28px rgba(0,0,0,0.6);
+      --outline: 1px solid rgba(255,255,255,0.03);
+      --badge-bg: #10b981;
+      --glass-bg: rgba(255,255,255,0.03); /* darker glass */
+      --glass-border: rgba(255,255,255,0.06);
+    }
+
+    /* Base */
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      transition: background .25s ease, color .25s ease;
+    }
     .container{max-width:1180px;margin:28px auto;padding:20px}
-    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-    .brand{display:flex;align-items:center;gap:14px}
-    .brand img{width:54px;height:54px;border-radius:12px;object-fit:cover;border:1px solid rgba(0,0,0,0.04)}
-    .brand h1{font-size:22px;margin:0;color:var(--primary)}
-    .brand p{margin:0;color:var(--muted);font-size:13px}
 
-    .top-right{display:flex;gap:12px;align-items:center}
-    .control{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--surface);box-shadow:var(--soft-shadow);border:var(--outline);cursor:pointer}
-    .control .label{font-size:13px;color:var(--muted)}
-    .switch{position:relative;width:46px;height:26px;border-radius:999px;background:#e9eef6;border:1px solid rgba(2,6,23,0.04);flex-shrink:0}
-    .switch .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:white;box-shadow:0 4px 10px rgba(2,6,23,0.12);transition:all .18s}
-    .switch.on{background:linear-gradient(90deg,var(--primary),var(--accent))}
-    .switch.on .knob{transform:translateX(20px)}
+    /* ===== HEADER ===== */
+    .main-header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:14px 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.55));
+      border-radius: 12px;
+      box-shadow: var(--soft-shadow);
+      border: 1px solid rgba(255,255,255,0.5);
+      margin-bottom: 22px;
+      align-items:center;
 
-    .grid{display:grid;grid-template-columns:320px 1fr;gap:20px}
-    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+      /* subtle glass */
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
 
-    .panel{background:var(--surface);border-radius:14px;padding:16px;box-shadow:var(--soft-shadow);border:var(--outline)}
-    .panel h3{margin:0 0 6px 0}
+    /* dark header glass override */
+    body.dark .main-header {
+      background: linear-gradient(180deg, rgba(8,18,36,0.6), rgba(8,18,36,0.5));
+      border: var(--outline);
+    }
+
+    .header-left { display:flex; align-items:center; gap:12px; min-width: 240px; }
+    .logo {
+      width:56px; height:56px; border-radius:12px; object-fit:cover; border:1px solid rgba(0,0,0,0.04);
+    }
+    body.dark .logo { border:1px solid rgba(255,255,255,0.04); }
+
+    .brand-text h1 { margin:0; font-size:20px; color: var(--primary); }
+    .brand-text p { margin:0; font-size:13px; color: var(--muted); margin-top:2px; }
+
+    .header-center { flex:1; text-align:center; font-size:20px; font-weight:700; line-height:1.2; }
+    .greeting-sub { display:block; font-weight:600; margin-top:6px; font-size:12px; color:var(--muted); }
+
+    /* Quote styles: hero, muted subtitle, italic whisper */
+    .quote-hero { display:block; font-size:14px; font-weight:700; margin-top:10px; color:var(--primary); }
+    .quote-sub { display:block; font-size:14px; margin-top:6px; color:var(--muted); }
+    .quote-italic { display:block; font-size:13px; margin-top:6px; font-style:italic; color:var(--muted); opacity:0.9; }
+
+    /* Toggle */
+    .header-right { min-width:120px; display:flex; justify-content:flex-end; align-items:center; gap:12px; }
+    .toggle-wrap { display:flex; align-items:center; gap:10px; background:var(--surface); padding:6px 10px; border-radius:999px; border:var(--outline); box-shadow:var(--soft-shadow); }
+    .toggle-label { font-size:13px; color:var(--muted); font-weight:600; }
+
+    .switch {
+      position: relative;
+      width:52px; height:28px;
+      background: #e6eefb; border-radius:999px; cursor:pointer;
+      transition: background .3s ease;
+      display:flex; align-items:center; padding:2px;
+    }
+    .knob {
+      width:22px; height:22px; background:white; border-radius:50%; box-shadow: 0 6px 14px rgba(2,6,23,0.12);
+      transition: transform .35s cubic-bezier(.2,.9,.2,1), background .25s, color .25s;
+      display:flex; align-items:center; justify-content:center; font-size:13px;
+      transform-origin:center;
+    }
+    /* animate shrink-rotate-pop */
+    .knob.animate {
+      animation: iconSwap .45s ease;
+    }
+    @keyframes iconSwap {
+      0%   { transform: scale(1) rotate(0deg); opacity:1; }
+      45%  { transform: scale(0) rotate(90deg); opacity:0; }
+      55%  { transform: scale(0) rotate(90deg); opacity:0; }
+      100% { transform: scale(1) rotate(180deg); opacity:1; }
+    }
+
+    .switch.on { background: linear-gradient(90deg,var(--primary),var(--accent)); }
+    .switch.on .knob { transform: translateX(24px); }
+
+    /* GRID + PANELS */
+    .grid{display:grid;grid-template-columns:360px 1fr;gap:28px}
+    @media (max-width:900px){ .grid{grid-template-columns:1fr} }
+
+    .panel{
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.45));
+      border-radius:14px;padding:18px;box-shadow:var(--soft-shadow);border:1px solid rgba(255,255,255,0.45);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    body.dark .panel{
+      background: linear-gradient(180deg, rgba(8,18,36,0.6), rgba(8,18,36,0.45));
+      border: var(--outline);
+    }
+
+    .panel h3{margin:0 0 8px 0}
     .small-muted{color:var(--muted);font-size:13px;margin-top:6px}
 
-    .schedule-item{background:linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));padding:12px;border-radius:10px;margin-bottom:12px;border:1px solid rgba(0,0,0,0.02)}
-    .time-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .schedule-item{background:linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));padding:14px;border-radius:12px;margin-bottom:12px;border:1px solid rgba(0,0,0,0.02)}
+    body.dark .schedule-item{ background: rgba(255,255,255,0.02); border:var(--outline) }
+    .time-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
     .time{font-weight:700;color:var(--primary)}
-    .badge{background:var(--badge-bg);color:white;padding:4px 8px;border-radius:999px;font-size:12px}
+    .badge{background:var(--badge-bg);color:white;padding:6px 10px;border-radius:999px;font-size:12px}
 
     .top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
     .add-btn{background:linear-gradient(90deg,var(--primary),var(--accent));color:white;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
 
-    .med-list{display:flex;flex-direction:column;gap:18px}
-    .med-card{border-radius:14px;padding:18px;background:var(--green-soft);box-shadow:var(--soft-shadow);border:var(--outline);position:relative;overflow:hidden}
-    .med-card.alert{background:var(--red-soft)}
-    .med-head{display:flex;justify-content:space-between;align-items:start;gap:10px}
-    .med-left{display:flex;gap:12px;align-items:center}
-    .pill-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(90deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;box-shadow:0 6px 18px rgba(14,70,200,0.12)}
-    .med-title{font-size:18px;margin:0}
-    .med-meta{color:var(--muted);font-size:13px;margin-top:6px}
-    .med-actions{display:flex;gap:10px;align-items:center}
-    .action-btn{background:transparent;border:none;cursor:pointer;font-size:18px;color:var(--muted);opacity:0.95}
-    .time-pill{display:inline-block;background:rgba(0,0,0,0.04);padding:6px 10px;border-radius:8px;margin-top:10px;color:var(--muted);font-weight:600}
+    /* === MED CARD GLASS STYLE (subtle) === */
+    .med-card{
+      background: rgba(255,255,255,0.65);
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 14px;
+      box-shadow: 0 8px 20px rgba(16,24,40,0.06);
+      border: 1px solid rgba(255,255,255,0.6);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+    .med-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(16,24,40,0.12); }
 
-    .warning{margin-top:12px;padding:10px;border-radius:10px;background:transparent;color:var(--muted);font-size:14px;border:1px dashed rgba(0,0,0,0.04)}
-    .toast{position:fixed;right:20px;bottom:20px;background:var(--surface);padding:12px 16px;border-radius:12px;border:var(--outline);box-shadow:var(--soft-shadow);z-index:9999}
+    body.dark .med-card{
+      background: rgba(255,255,255,0.02);
+      border: var(--outline);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+    }
+
+    .med-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .med-head h3{margin:0}
+    .time-pill{color:var(--muted);font-size:13px;margin-top:6px}
+
+    .med-actions{display:flex;gap:10px}
+    .action-btn{background:transparent;border:none; font-size: 25px; cursor:pointer;padding:6px 8px;border-radius:6px;color: var(--icon-color);}
+
+    /* MODALS */
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; justify-content:center; align-items:center; z-index:9999; }
+    .modal { background: var(--surface); padding:30px; border-radius:18px; width:420px; box-shadow:var(--soft-shadow); border:var(--outline); }
+    @keyframes pop { from{transform:scale(.96);opacity:0} to{transform:scale(1);opacity:1} }
+    .modal { animation: pop .12s ease; }
+    .close-modal{ float:right; font-size:20px; cursor:pointer; margin-top:-8px; }
+    .modal-title{ font-size:20px; font-weight:600; margin-bottom:14px; }
+    .form-group{ margin-bottom:14px; }
+    .label{ display:block; font-weight:600; margin-bottom:6px; color:var(--muted); }
+    .input{ width:100%; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); box-sizing:border-box; background:transparent; color:var(--text); }
+    .primary-btn{ background: linear-gradient(90deg,var(--primary),var(--accent)); color:white; padding:12px 14px; border-radius:10px; border:none; cursor:pointer; width:100%; }
+
+    /* small screens */
+    @media (max-width:520px) {
+      .main-header { flex-direction:column; gap:12px; align-items:flex-start; }
+      .header-center { text-align:left; }
+    }
+    
   </style>
 </head>
+
 <body>
   <div class="container">
-    <header>
-      <div class="brand" aria-hidden="false">
-        <!-- using uploaded image path as requested -->
-        <img src="static/logo.png" alt="DoseBuddy logo">
-        <div>
+
+    <!-- ===== HEADER (with logo, greeting, theme toggle) ===== -->
+    <header class="main-header">
+      <div class="header-left">
+        <!-- use uploaded image path as the logo per your instruction -->
+        <img src="/static/logo.png" alt="DoseBuddy logo" class="logo">
+        <div class="brand-text">
           <h1>DoseBuddy</h1>
           <p class="small-muted">Intelligence behind every dose</p>
         </div>
       </div>
 
-      <div class="top-right">
-        <div class="control" id="reminderControl" role="button" tabindex="0" title="Toggle reminders">
-          <div class="label" style="font-weight:600;margin-right:8px">Reminders</div>
-          <div id="reminderSwitch" class="switch" role="switch" aria-pressed="true"><div class="knob"></div></div>
-        </div>
+      <div class="header-center" id="greeting">
+  <span class="greeting-title" id="greetingTitle"></span>
+  <span class="greeting-sub" id="greetingSub"></span>
 
-        <div class="control" id="themeControl" role="button" tabindex="0" title="Toggle theme">
-          <div class="label" style="font-weight:600;margin-right:8px">Theme</div>
-          <div id="themeSwitch" class="switch" role="switch" aria-pressed="false"><div class="knob"></div></div>
+  <span class="quote-hero" id="quoteHero"></span>
+  <span class="quote-sub" id="quoteSub"></span>
+  <span class="quote-italic" id="quoteItalic"></span>
+</div>
+
+
+      <div class="header-right">
+        <div class="toggle-wrap">
+          <div class="toggle-label small-muted">Theme</div>
+          <div id="themeSwitch" class="switch" role="switch" aria-checked="false" tabindex="0" aria-label="Toggle theme">
+            <div class="knob" id="themeIcon">☀️</div>
+          </div>
         </div>
       </div>
     </header>
 
+    <!-- ===== MAIN GRID ===== -->
     <div class="grid">
-      <!-- LEFT: Today's Schedule -->
-      <aside class="panel" aria-labelledby="schedule-title">
-        <h3 id="schedule-title">Today's Schedule</h3>
-        <div class="small-muted" style="margin-bottom:12px">Upcoming medicines for today</div>
+      <aside class="panel">
+        <h3>Notifications</h3>
+        <div class="small-muted" style="margin-bottom:12px">Status of Current and past notifications </div>
 
-        {% set todays = [] %}
         {% for m in medicines %}
-            {# naive "today" filter: if time is present show it here; for completeness we show all meds - you can adapt #}
-            <div class="schedule-item" data-id="{{ m.id }}">
-              <div class="time-row">
-                <div class="time">{{ m.time }}</div>
-                <div class="badge">Planned</div>
-              </div>
-              <div style="font-weight:700">{{ m.name }}</div>
-              <div class="small-muted">{{ m.dosage }}</div>
-            </div>
+        <div class="schedule-item">
+          <div class="time-row">
+            <div class="time">{{ m.time }}</div>
+            <div class="badge">Planned</div>
+          </div>
+          <div style="font-weight:700">{{ m.name }}</div>
+          <div class="small-muted">{{ m.dosage }}</div>
+        </div>
         {% endfor %}
 
         {% if medicines|length == 0 %}
           <div class="small-muted">No medicines scheduled for today.</div>
         {% endif %}
-
       </aside>
 
-      <!-- RIGHT: Medication list -->
       <main>
         <div class="top-row">
           <div>
             <h2 style="margin:0">My Medications</h2>
             <div class="small-muted">Manage your active medicines</div>
           </div>
-          <button class="add-btn" id="addBtn" onclick="location.href='/add'">+ Add Medicine</button>
+
+          <button class="add-btn" id="openAddModal">+ Add Medicine</button>
         </div>
 
-        <section class="med-list" id="medList" aria-live="polite">
+        <section id="medList">
           {% for m in medicines %}
-          <article class="med-card {{ 'alert' if 'take' in (m.food_type|lower) and 'food' in (m.food_type|lower) else '' }}" data-id="{{ m.id }}" aria-label="{{ m.name }}">
+          <article class="med-card" role="article" aria-label="{{ m.name }}">
             <div class="med-head">
-              <div class="med-left">
-                <div class="pill-icon">💊</div>
-                <div>
-                  <h3 class="med-title">{{ m.name }}</h3>
-                  <div class="med-meta">{{ m.dosage }} • <span class="small-muted">Schedule</span></div>
-                  <div class="time-pill">{{ m.time }}</div>
-                </div>
+              <div>
+                <h3>{{ m.name }}</h3>
+                <div class="small-muted">{{ m.dosage }}</div>
+                <div class="time-pill">{{ m.time }}</div>
               </div>
 
               <div class="med-actions">
-                <a href="/edit/{{ m.id }}" class="action-btn" title="Edit">✏</a>
+                <!-- EDIT BUTTON -->
+                <button class="action-btn"
+                        onclick="openEditModal({{ m.id }}, '{{ m.name }}', '{{ m.dosage }}', '{{ m.time }}', '{{ m.food_type }}')"
+                        title="Edit">✏</button>
 
-                <!-- delete should ideally be POST; we keep GET for compatibility with your existing route -->
-                <form method="POST" action="/delete/{{ m.id }}" style="display:inline" onsubmit="return confirm('Delete this medicine?');">
-                  <button type="submit" class="action-btn" title="Delete">🗑</button>
-                </form>
+                <!-- DELETE BUTTON -->
+                <button class="action-btn" title="Delete"
+                        onclick="openDeleteModal({{ m.id }}, '{{ m.name }}')">🗑</button>
               </div>
             </div>
-
-            {% if m.food_type %}
-            <div class="warning">{{ m.food_type }}</div>
-            {% endif %}
           </article>
           {% endfor %}
-
-          {% if medicines|length == 0 %}
-            <p class="small-muted">No medicines added yet.</p>
-          {% endif %}
         </section>
       </main>
     </div>
-
-    <div style="margin-top:18px;color:var(--muted);font-size:13px">Tip: use the Add button to register a new medicine, or Edit to change details.</div>
   </div>
 
-  <div id="toastArea" aria-live="polite"></div>
+  <!-- ======================= ADD MODAL ============================== -->
+  <div class="modal-backdrop" id="addModal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <span class="close-modal" onclick="closeAddModal()">×</span>
+      <h2 class="modal-title">Add Medicine</h2>
 
-<script>
-  const REM_KEY = 'dose_reminders_on_v1';
-  const THEME_KEY = 'dose_theme_v1';
-  const reminderSwitch = document.getElementById('reminderSwitch');
-  const themeSwitch = document.getElementById('themeSwitch');
-  const reminderControl = document.getElementById('reminderControl');
-  const themeControl = document.getElementById('themeControl');
-  const toastArea = document.getElementById('toastArea');
+      <form method="POST" action="/add">
+        <div class="form-group">
+          <label class="label">Medicine Name</label>
+          <input class="input" type="text" name="name" required>
+        </div>
 
-  function showToast(msg, t=2000){
-    const el = document.createElement('div');
-    el.className = 'toast';
-    el.textContent = msg;
-    toastArea.appendChild(el);
-    setTimeout(()=> el.remove(), t);
-  }
-  function setSwitchVisual(el, on){
-    if(on) el.classList.add('on'); else el.classList.remove('on');
-    el.setAttribute('aria-pressed', on ? 'true' : 'false');
-  }
+        <div class="form-group">
+          <label class="label">Dosage</label>
+          <input class="input" type="text" name="dosage" required>
+        </div>
 
-  function loadStates(){
-    const rem = localStorage.getItem(REM_KEY);
-    const theme = localStorage.getItem(THEME_KEY);
-    const remindersOn = rem === null ? true : (rem === 'true');
-    setSwitchVisual(reminderSwitch, remindersOn);
-    const isDark = theme === 'dark';
-    document.body.classList.toggle('dark', isDark);
-    setSwitchVisual(themeSwitch, isDark);
-  }
+        <div class="form-group">
+          <label class="label">Time</label>
+          <input class="input" type="time" name="time" required>
+        </div>
 
-  function toggleReminders(){
-    const curr = reminderSwitch.classList.contains('on');
-    const next = !curr;
-    setSwitchVisual(reminderSwitch, next);
-    localStorage.setItem(REM_KEY, next);
-    showToast(next ? 'Reminders enabled' : 'Reminders disabled');
-  }
-  function toggleTheme(){
-    const curr = document.body.classList.contains('dark');
-    const next = !curr;
-    document.body.classList.toggle('dark', next);
-    setSwitchVisual(themeSwitch, next);
-    localStorage.setItem(THEME_KEY, next ? 'dark' : 'light');
-    showToast(next ? 'Dark mode' : 'Light mode');
-  }
+        <div class="form-group">
+          <label class="label">Food Instruction</label>
+          <select class="input" name="food">
+            <option value="before">Before Food</option>
+            <option value="after">After Food</option>
+          </select>
+        </div>
 
-  reminderControl.addEventListener('click', toggleReminders);
-  themeControl.addEventListener('click', toggleTheme);
-  reminderControl.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); toggleReminders(); }});
-  themeControl.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); toggleTheme(); }});
+        <button class="primary-btn" type="submit">Save Medicine</button>
+      </form>
+    </div>
+  </div>
 
-  loadStates();
-</script>
+  <!-- ======================= EDIT MODAL ============================== -->
+  <div class="modal-backdrop" id="editModal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <span class="close-modal" onclick="closeEditModal()">×</span>
+      <h2 class="modal-title">Edit Medicine</h2>
+
+      <form method="POST" id="editForm">
+        <div class="form-group">
+          <label class="label">Medicine Name</label>
+          <input class="input" name="name" id="editName" required>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Dosage</label>
+          <input class="input" name="dosage" id="editDosage" required>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Time</label>
+          <input class="input" type="time" name="time" id="editTime" required>
+        </div>
+
+        <div class="form-group">
+          <label class="label">Food Instruction</label>
+          <select class="input" name="food" id="editFood">
+            <option value="before">Before Food</option>
+            <option value="after">After Food</option>
+          </select>
+        </div>
+
+        <button class="primary-btn" type="submit">Update Medicine</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ======================= DELETE MODAL ============================== -->
+  <div class="modal-backdrop" id="deleteModal">
+    <div class="modal" role="dialog" aria-modal="true">
+      <span class="close-modal" onclick="closeDeleteModal()">×</span>
+      <h2 class="modal-title">Delete Medicine</h2>
+
+      <p id="deleteDesc" style="margin-bottom:14px; color:var(--muted)"></p>
+
+      <form method="POST" id="deleteForm">
+        <button class="primary-btn" style="background:#e63946" type="submit">Delete</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    /* ================= Greeting (motivational) + rotating quotes (3 unique) ================= */
+    function setMotivationalGreetingAndQuotes() {
+      const g = document.getElementById('greeting');
+      const sub = document.getElementById('greetingSub');
+
+      const now = new Date();
+      const hour = now.getHours();
+
+      let title = "Hello — Stay healthy!";
+      let subText = "";
+
+      if (hour < 12) {
+        title = "Good Morning ☀ — Time to stay healthy!";
+        subText = "Start your day strong — don't forget your meds.";
+      } else if (hour < 17) {
+        title = "Good Afternoon ☀️ — Keep going!";
+        subText = "A quick reminder: stay consistent with your doses.";
+      } else {
+        title = "Good Evening 🌙 — Time to relax";
+        subText = "Wind down and remember your evening medicines.";
+      }
+
+      // place title as first text node in header center (safe)
+      document.getElementById("greetingTitle").innerText = title;
+
+      if (sub) sub.innerText = subText;
+
+      const quotes = [
+        "Your health is your greatest investment.",
+        "Small steps today prevent big problems tomorrow.",
+        "Consistency is the secret ingredient.",
+        "Every dose is a step toward a healthier you.",
+        "Healthy habits compound over time.",
+        "Care for your body — it's the only one you've got.",
+        "Small progress is still progress.",
+        "A little care today avoids big worries tomorrow.",
+        "Prioritize yourself, one dose at a time.",
+        "Good health starts with good routines."
+      ];
+
+      function pickThree(arr) {
+        const copy = arr.slice();
+        const pick = [];
+        for (let i=0;i<3;i++){
+          const idx = Math.floor(Math.random()*copy.length);
+          pick.push(copy.splice(idx,1)[0]);
+        }
+        return pick;
+      }
+      const picked = pickThree(quotes);
+      document.getElementById('quoteHero').innerText = picked[0];
+  
+    }
+    setMotivationalGreetingAndQuotes();
+
+    /* ================ Theme Toggle (animated sun/moon) ================ */
+    const themeSwitch = document.getElementById('themeSwitch');
+    const themeIcon = document.getElementById('themeIcon');
+
+    function updateThemeIcon(animated = false) {
+      if (animated) {
+        themeIcon.classList.add('animate');
+        setTimeout(()=> themeIcon.classList.remove('animate'), 450);
+      }
+      themeIcon.textContent = document.body.classList.contains('dark') ? '🌙' : '☀️';
+    }
+
+    function applyTheme(isDark, animated = false) {
+      if (isDark) {
+        document.body.classList.add('dark');
+        themeSwitch.classList.add('on');
+        themeSwitch.setAttribute('aria-checked','true');
+      } else {
+        document.body.classList.remove('dark');
+        themeSwitch.classList.remove('on');
+        themeSwitch.setAttribute('aria-checked','false');
+      }
+      updateThemeIcon(animated);
+    }
+
+    // load preference
+    const stored = localStorage.getItem('dose_theme');
+    applyTheme(stored === 'dark', false);
+
+    // toggle via click/keyboard
+    themeSwitch.addEventListener('click', () => {
+      const dark = !document.body.classList.contains('dark');
+      applyTheme(dark, true);
+      localStorage.setItem('dose_theme', dark ? 'dark' : 'light');
+    });
+    themeSwitch.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        themeSwitch.click();
+      }
+    });
+
+    /* ================= MODAL HANDLERS ================= */
+    function openAddModal(){ document.getElementById("addModal").style.display="flex"; }
+    function closeAddModal(){ document.getElementById("addModal").style.display="none"; }
+    document.getElementById("openAddModal").onclick = openAddModal;
+
+    function openEditModal(id,name,dosage,time,food){
+      document.getElementById("editModal").style.display="flex";
+      document.getElementById("editName").value = name;
+      document.getElementById("editDosage").value = dosage;
+      document.getElementById("editTime").value = time;
+      document.getElementById("editFood").value = food;
+      document.getElementById("editForm").action = "/edit/" + id;
+    }
+    function closeEditModal(){ document.getElementById("editModal").style.display="none"; }
+
+    function openDeleteModal(id,name){
+      document.getElementById("deleteModal").style.display="flex";
+      document.getElementById("deleteForm").action = "/delete/" + id;
+      document.getElementById("deleteDesc").innerText = `Are you sure you want to delete "${name}"? This action cannot be undone.`;
+    }
+    function closeDeleteModal(){ document.getElementById("deleteModal").style.display="none"; }
+
+    // close modals by clicking backdrop
+    window.addEventListener('click', function(e){
+      ['addModal','editModal','deleteModal'].forEach(id=>{
+        const el = document.getElementById(id);
+        if (el && el.style.display === 'flex' && e.target === el) el.style.display = 'none';
+      });
+    });
+
+    // accessibility: close modals on Escape
+    window.addEventListener('keyup', function(e){
+      if (e.key === 'Escape') {
+        ['addModal','editModal','deleteModal'].forEach(id=>{
+          const el = document.getElementById(id);
+          if (el) el.style.display = 'none';
+        });
+      }
+    });
+  </script>
 </body>
 </html>
