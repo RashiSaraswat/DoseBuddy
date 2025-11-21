@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DoseBuddy Dashboard</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<div class="navbar">
+    <h1>DoseBuddy – Dashboard</h1>
+</div>
+
+<div class="container">
+
+    <h2>Your Medicines</h2>
+
+    <a href="/add" class="btn">➕ Add Medicine</a>
+    <br><br>
+
+    {% if medicines|length == 0 %}
+        <div class="alert-box">
+            No medicines added yet. Click "Add Medicine" above.
+        </div>
+    {% else %}
+    <table>
+        <tr>
+            <th>Medicine</th>
+            <th>Dosage</th>
+            <th>Time</th>
+            <th>Food</th>
+        </tr>
+
+        {% for m in medicines %}
+        <tr>
+            <td>{{ m.name }}</td>
+            <td>{{ m.dosage }}</td>
+            <td>{{ m.time }}</td>
+            <td>{{ m.food_type }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+</div>
+
+<script src="/static/js/main.js"></script>
+
+</body>
+</html>
