@@ -1,24 +1,248 @@
+<!--
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>DoseBuddy</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DoseBuddy – Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
+
 <body>
 
-<div class="navbar">
-    <h1>DoseBuddy – Smart Medicine Reminder</h1>
+<div class="app">
+
+   
+    <aside class="sidebar">
+        
+        <div>
+            <div class="brand">
+                <img src="/static/logo.png" alt="DoseBuddy Logo">
+                <div>
+                    <h1>DoseBuddy</h1>
+                    <p class="muted">Intelligence Behind Every Dose</p>
+                </div>
+            </div>
+
+            <nav class="menu">
+                <a href="/" class="active">🏠 Dashboard</a>
+                <a href="/add">➕ Add Medicine</a>
+            </nav>
+        </div>
+
+        <div class="footer">Version 1.0</div>
+    </aside>
+
+
+
+    
+    <main class="main">
+
+        
+        <div class="topbar">
+            <h2>Welcome 👋</h2>
+
+            <div style="display:flex; gap:10px;">
+                <button class="btn ghost" id="themeToggle">Toggle Theme</button>
+                <button class="btn ghost" id="notifyBtn">Enable Notifications</button>
+            </div>
+        </div>
+
+
+        
+        <section class="card">
+            <h3>All Medicines</h3>
+            <div class="muted tiny">Manage, edit or delete entries</div>
+
+            <div class="med-list">
+
+                {% for m in medicines %}
+                <div class="med-item">
+                    <div class="left">
+                        <div class="avatar">{{ m.name[0] }}</div>
+                        
+                        <div class="med-meta">
+                            <strong>{{ m.name }}</strong>
+                            <div class="muted tiny">
+                                {{ m.dosage }} • {{ m.time }} • {{ m.food_type }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <a href="/edit/{{ m.id }}" class="btn ghost tiny">Edit</a>
+                        <a href="/delete/{{ m.id }}" class="btn tiny"
+                           onclick="return confirm('Delete this medicine?')">Delete</a>
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% if medicines|length == 0 %}
+                <p class="muted">No medicines added yet.</p>
+                {% endif %}
+
+            </div>
+        </section>
+
+    </main>
+
 </div>
 
-<div class="container">
-    <h2>Welcome to DoseBuddy!</h2>
-
-    <button onclick="enableNotifications()">Enable Notifications</button>
-    <br><br>
-
-    <a href="/dashboard" class="btn">Go to Dashboard</a>
-</div>
-
-<script src="/static/js/main.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DoseBuddy — Dashboard</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+
+    <!-- TOP HEADER -->
+    <header class="header">
+      <div class="brand-left">
+        <!-- using the uploaded image as logo; replace path if needed -->
+        <img src="/static/logo.png" alt="DoseBuddy logo">
+        <div class="brand-title">
+          <h1>DoseBuddy</h1>
+          <p>Your smart medicine companion</p>
+        </div>
+      </div>
+
+      <div class="top-controls">
+        <div class="switch" title="Reminders">
+          <div style="display:flex; align-items:center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2a6 6 0 00-6 6v4l-2 2v1h16v-1l-2-2V8a6 6 0 00-6-6z" stroke="#1f2937" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="label">Reminders On</div>
+          <div class="toggle on" id="remToggle">
+            <div class="dot"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN GRID -->
+    <div class="grid">
+
+      <!-- LEFT: Today's Schedule -->
+      <aside>
+        <div class="card">
+          <h4>📅 Today's Schedule</h4>
+          <div class="small-muted">Quick view of today's meds</div>
+
+          <div class="schedule-item">
+            <div class="row">
+              <div>
+                <div class="time">08:00</div>
+                <div style="font-weight:700; margin-top:6px;">Vitamin D</div>
+                <div class="small-muted">2000 IU</div>
+              </div>
+              <div style="display:flex;align-items:flex-start;flex-direction:column;gap:6px;">
+                <div class="pill">Taken</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="schedule-item">
+            <div class="row">
+              <div>
+                <div class="time">09:00</div>
+                <div style="font-weight:700; margin-top:6px;">Aspirin</div>
+                <div class="small-muted">100mg</div>
+              </div>
+              <div><div class="pill">Taken</div></div>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- RIGHT: My Medications -->
+      <main>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <div style="flex:1">
+            <h2 style="margin:0 0 6px 0;">My Medications</h2>
+            <div class="small-muted">Manage, edit or delete entries</div>
+          </div>
+          <div style="margin-left:16px;">
+            <button class="btn">＋ Add Medicine</button>
+          </div>
+        </div>
+
+        <!-- medication cards -->
+        <div class="med-card blue">
+          <div class="med-icon">💊</div>
+          <div class="med-body">
+            <strong>Aspirin</strong>
+            <div class="meta">
+              <div>100mg</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 8v5l3 3" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div>Once daily</div>
+                <span class="time-pill">09:00</span>
+              </div>
+            </div>
+
+            <div class="note" style="background: rgba(255,255,255,0.85);">
+              ⚠️ Take with food
+            </div>
+          </div>
+
+          <div class="icon-actions">
+            <button class="icon" title="Edit">✏️</button>
+            <button class="icon" title="Delete">🗑️</button>
+          </div>
+        </div>
+
+        <div class="med-card green">
+          <div class="med-icon">💊</div>
+          <div class="med-body">
+            <strong>Vitamin D</strong>
+            <div class="meta">
+              <div>2000 IU</div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 8v5l3 3" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <div>Once daily</div>
+                <span class="time-pill">08:00</span>
+              </div>
+            </div>
+
+            <div class="note" style="background: rgba(255,255,255,0.85);">
+              ⚠️ Morning supplement
+            </div>
+          </div>
+
+          <div class="icon-actions">
+            <button class="icon" title="Edit">✏️</button>
+            <button class="icon" title="Delete">🗑️</button>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+<script>
+  // small toggle behavior
+  const remToggle = document.getElementById('remToggle');
+  remToggle?.addEventListener('click', () => {
+    remToggle.classList.toggle('on');
+    // you can send preference to backend here
+    const isOn = remToggle.classList.contains('on');
+    document.querySelector('.switch .label').textContent = isOn ? 'Reminders On' : 'Reminders Off';
+  });
+</script>
+</body>
+</html>
+
+
+
+
+
+
