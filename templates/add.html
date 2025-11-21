@@ -1,43 +1,139 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Add Medicine – DoseBuddy</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+
+    <style>
+    body {
+        background: #f3f5fa;
+        font-family: Inter, sans-serif;
+        margin: 0;
+    }
+
+    .topbar {
+        position: sticky;
+        top: 0;
+        background: white;
+        padding: 18px 24px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+    .topbar .left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .back-btn {
+        font-size: 22px;
+        text-decoration: none;
+        color: black;
+    }
+
+    .title {
+        margin: 0;
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .page-container {
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+    .card {
+        background: white;
+        padding: 30px;
+        border-radius: 18px;
+        width: 480px;                  /* fixed width */
+        box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .label {
+        display: block;
+        font-size: 14px;
+        margin-bottom: 6px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .input {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid #cfd4e2;
+        font-size: 15px;
+        box-sizing: border-box;   /* <<< IMPORTANT FIX */
+    }
+
+    .primary-btn {
+        background: #4c6ef5;
+        color: white;
+        padding: 14px 10px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        cursor: pointer;
+        width: 100%;
+    }
+</style>
+
 </head>
+
 <body>
 
-<div class="navbar">
-    <h1>DoseBuddy – Add Medicine</h1>
-</div>
+    <!-- TOP BAR -->
+    <header class="topbar">
+        <a href="/dashboard" class="back-btn">←</a>
+        <h1 class="title">Add Medicine</h1>
+    </header>
 
-<div class="container">
-    <h2>Add New Medicine</h2>
+    <!-- CENTERED FORM -->
+    <div class="wrapper">
+        <div class="card">
 
-    <form method="POST">
+            <form method="POST" autocomplete="off">
 
-        <label>Medicine Name:</label>
-        <input type="text" name="name" required placeholder="Eg: Paracetamol">
+                <div class="form-group">
+                    <label class="label">Medicine Name</label>
+                    <input class="input" type="text" name="name" required placeholder="Eg: Paracetamol">
+                </div>
 
-        <label>Dosage:</label>
-        <input type="text" name="dosage" required placeholder="Eg: 500mg">
+                <div class="form-group">
+                    <label class="label">Dosage</label>
+                    <input class="input" type="text" name="dosage" required placeholder="Eg: 500mg">
+                </div>
 
-        <label>Time:</label>
-        <input type="time" name="time" required>
+                <div class="form-group">
+                    <label class="label">Time</label>
+                    <input class="input" type="time" name="time" required>
+                </div>
 
-        <label>Food Instruction:</label>
-        <select name="food">
-            <option value="before">Before Food</option>
-            <option value="after">After Food</option>
-        </select>
+                <div class="form-group">
+                    <label class="label">Food Instruction</label>
+                    <select class="input" name="food">
+                        <option value="Before Food">Before Food</option>
+                        <option value="After Food">After Food</option>
+                    </select>
+                </div>
 
-        <button type="submit">Add Medicine</button>
-    </form>
+                <button type="submit" class="primary-btn">Save Medicine</button>
 
-    <br>
-    <a href="/" class="btn">Back to Dashboard</a>
-</div>
+            </form>
 
-<script src="/static/js/main.js"></script>
+        </div>
+    </div>
 
 </body>
 </html>

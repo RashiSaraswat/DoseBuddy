@@ -1,248 +1,218 @@
-<!--
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DoseBuddy – Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-
-<body>
-
-<div class="app">
-
-   
-    <aside class="sidebar">
-        
-        <div>
-            <div class="brand">
-                <img src="/static/logo.png" alt="DoseBuddy Logo">
-                <div>
-                    <h1>DoseBuddy</h1>
-                    <p class="muted">Intelligence Behind Every Dose</p>
-                </div>
-            </div>
-
-            <nav class="menu">
-                <a href="/" class="active">🏠 Dashboard</a>
-                <a href="/add">➕ Add Medicine</a>
-            </nav>
-        </div>
-
-        <div class="footer">Version 1.0</div>
-    </aside>
-
-
-
-    
-    <main class="main">
-
-        
-        <div class="topbar">
-            <h2>Welcome 👋</h2>
-
-            <div style="display:flex; gap:10px;">
-                <button class="btn ghost" id="themeToggle">Toggle Theme</button>
-                <button class="btn ghost" id="notifyBtn">Enable Notifications</button>
-            </div>
-        </div>
-
-
-        
-        <section class="card">
-            <h3>All Medicines</h3>
-            <div class="muted tiny">Manage, edit or delete entries</div>
-
-            <div class="med-list">
-
-                {% for m in medicines %}
-                <div class="med-item">
-                    <div class="left">
-                        <div class="avatar">{{ m.name[0] }}</div>
-                        
-                        <div class="med-meta">
-                            <strong>{{ m.name }}</strong>
-                            <div class="muted tiny">
-                                {{ m.dosage }} • {{ m.time }} • {{ m.food_type }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <a href="/edit/{{ m.id }}" class="btn ghost tiny">Edit</a>
-                        <a href="/delete/{{ m.id }}" class="btn tiny"
-                           onclick="return confirm('Delete this medicine?')">Delete</a>
-                    </div>
-                </div>
-                {% endfor %}
-
-                {% if medicines|length == 0 %}
-                <p class="muted">No medicines added yet.</p>
-                {% endif %}
-
-            </div>
-        </section>
-
-    </main>
-
-</div>
-
-<script src="{{ url_for('static', filename='js/main.js') }}"></script>
-</body>
-</html>
--->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>DoseBuddy — Dashboard</title>
-  <link rel="stylesheet" href="/static/css/style.css">
+
+  <style>
+    :root{
+      --bg:#f6f8fb; --surface:#ffffff; --muted:#6b7280;
+      --primary:#2463ea; --accent:#00c2a8; --green-soft:#d9f7e3;
+      --red-soft:#ffe5e8; --card-radius:12px; --soft-shadow:0 8px 28px rgba(16,24,40,0.06);
+      --outline:1px solid rgba(15,23,36,0.04); --badge-bg:#10b981; --text:#0f1724;
+    }
+    body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+    .container{max-width:1180px;margin:28px auto;padding:20px}
+    header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+    .brand{display:flex;align-items:center;gap:14px}
+    .brand img{width:54px;height:54px;border-radius:12px;object-fit:cover;border:1px solid rgba(0,0,0,0.04)}
+    .brand h1{font-size:22px;margin:0;color:var(--primary)}
+    .brand p{margin:0;color:var(--muted);font-size:13px}
+
+    .top-right{display:flex;gap:12px;align-items:center}
+    .control{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--surface);box-shadow:var(--soft-shadow);border:var(--outline);cursor:pointer}
+    .control .label{font-size:13px;color:var(--muted)}
+    .switch{position:relative;width:46px;height:26px;border-radius:999px;background:#e9eef6;border:1px solid rgba(2,6,23,0.04);flex-shrink:0}
+    .switch .knob{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:white;box-shadow:0 4px 10px rgba(2,6,23,0.12);transition:all .18s}
+    .switch.on{background:linear-gradient(90deg,var(--primary),var(--accent))}
+    .switch.on .knob{transform:translateX(20px)}
+
+    .grid{display:grid;grid-template-columns:320px 1fr;gap:20px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+    .panel{background:var(--surface);border-radius:14px;padding:16px;box-shadow:var(--soft-shadow);border:var(--outline)}
+    .panel h3{margin:0 0 6px 0}
+    .small-muted{color:var(--muted);font-size:13px;margin-top:6px}
+
+    .schedule-item{background:linear-gradient(180deg, rgba(0,0,0,0.02), rgba(0,0,0,0.01));padding:12px;border-radius:10px;margin-bottom:12px;border:1px solid rgba(0,0,0,0.02)}
+    .time-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+    .time{font-weight:700;color:var(--primary)}
+    .badge{background:var(--badge-bg);color:white;padding:4px 8px;border-radius:999px;font-size:12px}
+
+    .top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .add-btn{background:linear-gradient(90deg,var(--primary),var(--accent));color:white;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
+
+    .med-list{display:flex;flex-direction:column;gap:18px}
+    .med-card{border-radius:14px;padding:18px;background:var(--green-soft);box-shadow:var(--soft-shadow);border:var(--outline);position:relative;overflow:hidden}
+    .med-card.alert{background:var(--red-soft)}
+    .med-head{display:flex;justify-content:space-between;align-items:start;gap:10px}
+    .med-left{display:flex;gap:12px;align-items:center}
+    .pill-icon{width:40px;height:40px;border-radius:10px;background:linear-gradient(90deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:white;font-weight:700;box-shadow:0 6px 18px rgba(14,70,200,0.12)}
+    .med-title{font-size:18px;margin:0}
+    .med-meta{color:var(--muted);font-size:13px;margin-top:6px}
+    .med-actions{display:flex;gap:10px;align-items:center}
+    .action-btn{background:transparent;border:none;cursor:pointer;font-size:18px;color:var(--muted);opacity:0.95}
+    .time-pill{display:inline-block;background:rgba(0,0,0,0.04);padding:6px 10px;border-radius:8px;margin-top:10px;color:var(--muted);font-weight:600}
+
+    .warning{margin-top:12px;padding:10px;border-radius:10px;background:transparent;color:var(--muted);font-size:14px;border:1px dashed rgba(0,0,0,0.04)}
+    .toast{position:fixed;right:20px;bottom:20px;background:var(--surface);padding:12px 16px;border-radius:12px;border:var(--outline);box-shadow:var(--soft-shadow);z-index:9999}
+  </style>
 </head>
 <body>
   <div class="container">
-
-    <!-- TOP HEADER -->
-    <header class="header">
-      <div class="brand-left">
-        <!-- using the uploaded image as logo; replace path if needed -->
-        <img src="/static/logo.png" alt="DoseBuddy logo">
-        <div class="brand-title">
+    <header>
+      <div class="brand" aria-hidden="false">
+        <!-- using uploaded image path as requested -->
+        <img src="static/logo.png" alt="DoseBuddy logo">
+        <div>
           <h1>DoseBuddy</h1>
-          <p>Your smart medicine companion</p>
+          <p class="small-muted">Intelligence behind every dose</p>
         </div>
       </div>
 
-      <div class="top-controls">
-        <div class="switch" title="Reminders">
-          <div style="display:flex; align-items:center;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2a6 6 0 00-6 6v4l-2 2v1h16v-1l-2-2V8a6 6 0 00-6-6z" stroke="#1f2937" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-          <div class="label">Reminders On</div>
-          <div class="toggle on" id="remToggle">
-            <div class="dot"></div>
-          </div>
+      <div class="top-right">
+        <div class="control" id="reminderControl" role="button" tabindex="0" title="Toggle reminders">
+          <div class="label" style="font-weight:600;margin-right:8px">Reminders</div>
+          <div id="reminderSwitch" class="switch" role="switch" aria-pressed="true"><div class="knob"></div></div>
+        </div>
+
+        <div class="control" id="themeControl" role="button" tabindex="0" title="Toggle theme">
+          <div class="label" style="font-weight:600;margin-right:8px">Theme</div>
+          <div id="themeSwitch" class="switch" role="switch" aria-pressed="false"><div class="knob"></div></div>
         </div>
       </div>
     </header>
 
-    <!-- MAIN GRID -->
     <div class="grid">
-
       <!-- LEFT: Today's Schedule -->
-      <aside>
-        <div class="card">
-          <h4>📅 Today's Schedule</h4>
-          <div class="small-muted">Quick view of today's meds</div>
+      <aside class="panel" aria-labelledby="schedule-title">
+        <h3 id="schedule-title">Today's Schedule</h3>
+        <div class="small-muted" style="margin-bottom:12px">Upcoming medicines for today</div>
 
-          <div class="schedule-item">
-            <div class="row">
-              <div>
-                <div class="time">08:00</div>
-                <div style="font-weight:700; margin-top:6px;">Vitamin D</div>
-                <div class="small-muted">2000 IU</div>
+        {% set todays = [] %}
+        {% for m in medicines %}
+            {# naive "today" filter: if time is present show it here; for completeness we show all meds - you can adapt #}
+            <div class="schedule-item" data-id="{{ m.id }}">
+              <div class="time-row">
+                <div class="time">{{ m.time }}</div>
+                <div class="badge">Planned</div>
               </div>
-              <div style="display:flex;align-items:flex-start;flex-direction:column;gap:6px;">
-                <div class="pill">Taken</div>
-              </div>
+              <div style="font-weight:700">{{ m.name }}</div>
+              <div class="small-muted">{{ m.dosage }}</div>
             </div>
-          </div>
+        {% endfor %}
 
-          <div class="schedule-item">
-            <div class="row">
-              <div>
-                <div class="time">09:00</div>
-                <div style="font-weight:700; margin-top:6px;">Aspirin</div>
-                <div class="small-muted">100mg</div>
-              </div>
-              <div><div class="pill">Taken</div></div>
-            </div>
-          </div>
+        {% if medicines|length == 0 %}
+          <div class="small-muted">No medicines scheduled for today.</div>
+        {% endif %}
 
-        </div>
       </aside>
 
-      <!-- RIGHT: My Medications -->
+      <!-- RIGHT: Medication list -->
       <main>
-        <div style="display:flex;align-items:center;justify-content:space-between;">
-          <div style="flex:1">
-            <h2 style="margin:0 0 6px 0;">My Medications</h2>
-            <div class="small-muted">Manage, edit or delete entries</div>
+        <div class="top-row">
+          <div>
+            <h2 style="margin:0">My Medications</h2>
+            <div class="small-muted">Manage your active medicines</div>
           </div>
-          <div style="margin-left:16px;">
-            <button class="btn">＋ Add Medicine</button>
-          </div>
+          <button class="add-btn" id="addBtn" onclick="location.href='/add'">+ Add Medicine</button>
         </div>
 
-        <!-- medication cards -->
-        <div class="med-card blue">
-          <div class="med-icon">💊</div>
-          <div class="med-body">
-            <strong>Aspirin</strong>
-            <div class="meta">
-              <div>100mg</div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 8v5l3 3" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <div>Once daily</div>
-                <span class="time-pill">09:00</span>
+        <section class="med-list" id="medList" aria-live="polite">
+          {% for m in medicines %}
+          <article class="med-card {{ 'alert' if 'take' in (m.food_type|lower) and 'food' in (m.food_type|lower) else '' }}" data-id="{{ m.id }}" aria-label="{{ m.name }}">
+            <div class="med-head">
+              <div class="med-left">
+                <div class="pill-icon">💊</div>
+                <div>
+                  <h3 class="med-title">{{ m.name }}</h3>
+                  <div class="med-meta">{{ m.dosage }} • <span class="small-muted">Schedule</span></div>
+                  <div class="time-pill">{{ m.time }}</div>
+                </div>
+              </div>
+
+              <div class="med-actions">
+                <a href="/edit/{{ m.id }}" class="action-btn" title="Edit">✏</a>
+
+                <!-- delete should ideally be POST; we keep GET for compatibility with your existing route -->
+                <form method="POST" action="/delete/{{ m.id }}" style="display:inline" onsubmit="return confirm('Delete this medicine?');">
+                  <button type="submit" class="action-btn" title="Delete">🗑</button>
+                </form>
               </div>
             </div>
 
-            <div class="note" style="background: rgba(255,255,255,0.85);">
-              ⚠️ Take with food
-            </div>
-          </div>
+            {% if m.food_type %}
+            <div class="warning">{{ m.food_type }}</div>
+            {% endif %}
+          </article>
+          {% endfor %}
 
-          <div class="icon-actions">
-            <button class="icon" title="Edit">✏️</button>
-            <button class="icon" title="Delete">🗑️</button>
-          </div>
-        </div>
-
-        <div class="med-card green">
-          <div class="med-icon">💊</div>
-          <div class="med-body">
-            <strong>Vitamin D</strong>
-            <div class="meta">
-              <div>2000 IU</div>
-              <div style="display:flex;align-items:center;gap:8px">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 8v5l3 3" stroke="#6b7280" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                <div>Once daily</div>
-                <span class="time-pill">08:00</span>
-              </div>
-            </div>
-
-            <div class="note" style="background: rgba(255,255,255,0.85);">
-              ⚠️ Morning supplement
-            </div>
-          </div>
-
-          <div class="icon-actions">
-            <button class="icon" title="Edit">✏️</button>
-            <button class="icon" title="Delete">🗑️</button>
-          </div>
-        </div>
-
+          {% if medicines|length == 0 %}
+            <p class="small-muted">No medicines added yet.</p>
+          {% endif %}
+        </section>
       </main>
     </div>
+
+    <div style="margin-top:18px;color:var(--muted);font-size:13px">Tip: use the Add button to register a new medicine, or Edit to change details.</div>
   </div>
 
+  <div id="toastArea" aria-live="polite"></div>
+
 <script>
-  // small toggle behavior
-  const remToggle = document.getElementById('remToggle');
-  remToggle?.addEventListener('click', () => {
-    remToggle.classList.toggle('on');
-    // you can send preference to backend here
-    const isOn = remToggle.classList.contains('on');
-    document.querySelector('.switch .label').textContent = isOn ? 'Reminders On' : 'Reminders Off';
-  });
+  const REM_KEY = 'dose_reminders_on_v1';
+  const THEME_KEY = 'dose_theme_v1';
+  const reminderSwitch = document.getElementById('reminderSwitch');
+  const themeSwitch = document.getElementById('themeSwitch');
+  const reminderControl = document.getElementById('reminderControl');
+  const themeControl = document.getElementById('themeControl');
+  const toastArea = document.getElementById('toastArea');
+
+  function showToast(msg, t=2000){
+    const el = document.createElement('div');
+    el.className = 'toast';
+    el.textContent = msg;
+    toastArea.appendChild(el);
+    setTimeout(()=> el.remove(), t);
+  }
+  function setSwitchVisual(el, on){
+    if(on) el.classList.add('on'); else el.classList.remove('on');
+    el.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+
+  function loadStates(){
+    const rem = localStorage.getItem(REM_KEY);
+    const theme = localStorage.getItem(THEME_KEY);
+    const remindersOn = rem === null ? true : (rem === 'true');
+    setSwitchVisual(reminderSwitch, remindersOn);
+    const isDark = theme === 'dark';
+    document.body.classList.toggle('dark', isDark);
+    setSwitchVisual(themeSwitch, isDark);
+  }
+
+  function toggleReminders(){
+    const curr = reminderSwitch.classList.contains('on');
+    const next = !curr;
+    setSwitchVisual(reminderSwitch, next);
+    localStorage.setItem(REM_KEY, next);
+    showToast(next ? 'Reminders enabled' : 'Reminders disabled');
+  }
+  function toggleTheme(){
+    const curr = document.body.classList.contains('dark');
+    const next = !curr;
+    document.body.classList.toggle('dark', next);
+    setSwitchVisual(themeSwitch, next);
+    localStorage.setItem(THEME_KEY, next ? 'dark' : 'light');
+    showToast(next ? 'Dark mode' : 'Light mode');
+  }
+
+  reminderControl.addEventListener('click', toggleReminders);
+  themeControl.addEventListener('click', toggleTheme);
+  reminderControl.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); toggleReminders(); }});
+  themeControl.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); toggleTheme(); }});
+
+  loadStates();
 </script>
 </body>
 </html>
-
-
-
-
-
-
