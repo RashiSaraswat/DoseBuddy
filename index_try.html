@@ -11,13 +11,14 @@
       --primary:#2463ea; --accent:#00c2a8; --green-soft:#d9f7e3;
       --red-soft:#ffe5e8; --card-radius:12px; --soft-shadow:0 8px 28px rgba(16,24,40,0.06);
       --outline:1px solid rgba(15,23,36,0.04); --badge-bg:#10b981; --text:#0f1724;
-      --glass-bg: rgba(255,255,255,0.55);
+      --glass-bg: rgba(255,255,255,0.55); /* for light glass */
       --glass-border: rgba(255,255,255,0.6);
       --icon-color: #333;
     }
 
+    /* Dark mode variables */
     body.dark {
-      --icon-color: #fff;
+      --icon-color: #fff; 
       --bg: #0b1220;
       --surface: rgba(8,18,36,0.6);
       --muted: #94a3b8;
@@ -27,11 +28,11 @@
       --soft-shadow: 0 8px 28px rgba(0,0,0,0.6);
       --outline: 1px solid rgba(255,255,255,0.03);
       --badge-bg: #10b981;
-      --glass-bg: rgba(255,255,255,0.03);
+      --glass-bg: rgba(255,255,255,0.03); /* darker glass */
       --glass-border: rgba(255,255,255,0.06);
     }
 
-    
+    /* Base */
     body{
       margin:0;
       font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
@@ -43,19 +44,35 @@
     }
     .container{max-width:1180px;margin:28px auto;padding:20px}
 
-    
+    /* ===== HEADER ===== */
     .main-header {
-      display:flex; align-items:center; justify-content:space-between; gap:20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
       padding:14px 20px;
       background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.55));
-      border-radius: 12px; box-shadow: var(--soft-shadow); border: 1px solid rgba(255,255,255,0.5);
-      margin-bottom: 22px; align-items:center;
+      border-radius: 12px;
+      box-shadow: var(--soft-shadow);
+      border: 1px solid rgba(255,255,255,0.5);
+      margin-bottom: 22px;
+      align-items:center;
+
+      /* subtle glass */
       backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
-    body.dark .main-header { background: linear-gradient(180deg, rgba(8,18,36,0.6), rgba(8,18,36,0.5)); border: var(--outline); }
+
+    /* dark header glass override */
+    body.dark .main-header {
+      background: linear-gradient(180deg, rgba(8,18,36,0.6), rgba(8,18,36,0.5));
+      border: var(--outline);
+    }
 
     .header-left { display:flex; align-items:center; gap:12px; min-width: 240px; }
-    .logo { width:56px; height:56px; border-radius:12px; object-fit:cover; border:1px solid rgba(0,0,0,0.04); }
+    .logo {
+      width:56px; height:56px; border-radius:12px; object-fit:cover; border:1px solid rgba(0,0,0,0.04);
+    }
     body.dark .logo { border:1px solid rgba(255,255,255,0.04); }
 
     .brand-text h1 { margin:0; font-size:20px; color: var(--primary); }
@@ -64,22 +81,44 @@
     .header-center { flex:1; text-align:center; font-size:20px; font-weight:700; line-height:1.2; }
     .greeting-sub { display:block; font-weight:600; margin-top:6px; font-size:12px; color:var(--muted); }
 
+    /* Quote styles: hero, muted subtitle, italic whisper */
     .quote-hero { display:block; font-size:14px; font-weight:700; margin-top:10px; color:var(--primary); }
     .quote-sub { display:block; font-size:14px; margin-top:6px; color:var(--muted); }
     .quote-italic { display:block; font-size:13px; margin-top:6px; font-style:italic; color:var(--muted); opacity:0.9; }
 
+    /* Toggle */
     .header-right { min-width:120px; display:flex; justify-content:flex-end; align-items:center; gap:12px; }
     .toggle-wrap { display:flex; align-items:center; gap:10px; background:var(--surface); padding:6px 10px; border-radius:999px; border:var(--outline); box-shadow:var(--soft-shadow); }
     .toggle-label { font-size:13px; color:var(--muted); font-weight:600; }
 
-    .switch { position: relative; width:52px; height:28px; background: #e6eefb; border-radius:999px; cursor:pointer; transition: background .3s ease; display:flex; align-items:center; padding:2px; }
-    .knob { width:22px; height:22px; background:white; border-radius:50%; box-shadow: 0 6px 14px rgba(2,6,23,0.12); transition: transform .35s cubic-bezier(.2,.9,.2,1), background .25s, color .25s; display:flex; align-items:center; justify-content:center; font-size:13px; transform-origin:center; }
-    .knob.animate { animation: iconSwap .45s ease; }
-    @keyframes iconSwap { 0% { transform: scale(1) rotate(0deg); opacity:1; } 45% { transform: scale(0) rotate(90deg); opacity:0; } 55% { transform: scale(0) rotate(90deg); opacity:0; } 100% { transform: scale(1) rotate(180deg); opacity:1; } }
+    .switch {
+      position: relative;
+      width:52px; height:28px;
+      background: #e6eefb; border-radius:999px; cursor:pointer;
+      transition: background .3s ease;
+      display:flex; align-items:center; padding:2px;
+    }
+    .knob {
+      width:22px; height:22px; background:white; border-radius:50%; box-shadow: 0 6px 14px rgba(2,6,23,0.12);
+      transition: transform .35s cubic-bezier(.2,.9,.2,1), background .25s, color .25s;
+      display:flex; align-items:center; justify-content:center; font-size:13px;
+      transform-origin:center;
+    }
+    /* animate shrink-rotate-pop */
+    .knob.animate {
+      animation: iconSwap .45s ease;
+    }
+    @keyframes iconSwap {
+      0%   { transform: scale(1) rotate(0deg); opacity:1; }
+      45%  { transform: scale(0) rotate(90deg); opacity:0; }
+      55%  { transform: scale(0) rotate(90deg); opacity:0; }
+      100% { transform: scale(1) rotate(180deg); opacity:1; }
+    }
+
     .switch.on { background: linear-gradient(90deg,var(--primary),var(--accent)); }
     .switch.on .knob { transform: translateX(24px); }
 
-    
+    /* GRID + PANELS */
     .grid{display:grid;grid-template-columns:360px 1fr;gap:28px}
     @media (max-width:900px){ .grid{grid-template-columns:1fr} }
 
@@ -87,8 +126,12 @@
       background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.45));
       border-radius:14px;padding:18px;box-shadow:var(--soft-shadow);border:1px solid rgba(255,255,255,0.45);
       backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
     }
-    body.dark .panel{ background: linear-gradient(180deg, rgba(8,18,36,0.6), rgba(8,18,36,0.45)); border: var(--outline); }
+    body.dark .panel{
+      background: linear-gradient(180deg, rgba(8,18,36,0.6), rgba(8,18,36,0.45));
+      border: var(--outline);
+    }
 
     .panel h3{margin:0 0 8px 0}
     .small-muted{color:var(--muted);font-size:13px;margin-top:6px}
@@ -102,7 +145,7 @@
     .top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
     .add-btn{background:linear-gradient(90deg,var(--primary),var(--accent));color:white;padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:600}
 
-  
+    /* === MED CARD GLASS STYLE (subtle) === */
     .med-card{
       background: rgba(255,255,255,0.65);
       padding: 16px;
@@ -111,10 +154,16 @@
       box-shadow: 0 8px 20px rgba(16,24,40,0.06);
       border: 1px solid rgba(255,255,255,0.6);
       backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       transition: transform .18s ease, box-shadow .18s ease;
     }
     .med-card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(16,24,40,0.12); }
-    body.dark .med-card{ background: rgba(255,255,255,0.02); border: var(--outline); box-shadow: 0 8px 28px rgba(0,0,0,0.6); }
+
+    body.dark .med-card{
+      background: rgba(255,255,255,0.02);
+      border: var(--outline);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.6);
+    }
 
     .med-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
     .med-head h3{margin:0}
@@ -123,9 +172,11 @@
     .med-actions{display:flex;gap:10px}
     .action-btn{background:transparent;border:none; font-size: 25px; cursor:pointer;padding:6px 8px;border-radius:6px;color: var(--icon-color);}
 
-    
+    /* MODALS */
     .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:none; justify-content:center; align-items:center; z-index:9999; }
     .modal { background: var(--surface); padding:30px; border-radius:18px; width:420px; box-shadow:var(--soft-shadow); border:var(--outline); }
+    @keyframes pop { from{transform:scale(.96);opacity:0} to{transform:scale(1);opacity:1} }
+    .modal { animation: pop .12s ease; }
     .close-modal{ float:right; font-size:20px; cursor:pointer; margin-top:-8px; }
     .modal-title{ font-size:20px; font-weight:600; margin-bottom:14px; }
     .form-group{ margin-bottom:14px; }
@@ -133,75 +184,22 @@
     .input{ width:100%; padding:12px; border-radius:10px; border:1px solid rgba(0,0,0,0.08); box-sizing:border-box; background:transparent; color:var(--text); }
     .primary-btn{ background: linear-gradient(90deg,var(--primary),var(--accent)); color:white; padding:12px 14px; border-radius:10px; border:none; cursor:pointer; width:100%; }
 
-   
+    /* small screens */
     @media (max-width:520px) {
       .main-header { flex-direction:column; gap:12px; align-items:flex-start; }
       .header-center { text-align:left; }
     }
-
     
-    .tick-wrapper { display:flex; align-items:center; gap:10px; cursor:pointer; user-select:none; }
-    .tick-circle {
-      width: 30px; height: 30px; border: 2.5px solid #4CAF50; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; transition: .25s; color: transparent;
-    }
-    .tick-circle:hover { box-shadow: 0 0 10px rgba(76,175,80,0.6); transform: scale(1.05); }
-    .tick-circle.checked { background:#4CAF50; color:white !important; border-color:#4CAF50; transform: scale(1.15); animation: tickPop 0.25s ease-out; }
-    @keyframes tickPop { 0%{ transform: scale(0.4); opacity:0 } 70%{ transform: scale(1.2); opacity:1 } 100%{ transform: scale(1.05) } }
-
-   
-    .badge.delayed { background:#ff5252; color:white; padding:2px 8px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block; margin-top:6px; }
-    .tick-btn{
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      border: 2px solid var(--muted);
-      background: transparent;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      transition: 0.25s ease;
-    }
-
-    .tick-btn.taken{
-      background: #22c55e;
-      border-color: #22c55e;
-    }
-
-    .tick-btn.delayed{
-      background: #f97316;
-      border-color: #f97316;
-    }
-
-    .tick-btn .tick-icon{
-      width: 14px;
-      height: 14px;
-      display: block;
-    }
-
-    .tick-btn.taken .tick-icon{
-      content: "✔";
-      color: white;
-      font-size: 16px;
-      font-weight: 900;
-    }
-
-    .tick-btn.delayed .tick-icon{
-      content: "⧗";
-      color: white;
-      font-size: 15px;
-      font-weight: 900;
-    }
   </style>
 </head>
 
 <body>
   <div class="container">
 
-    
+    <!-- ===== HEADER (with logo, greeting, theme toggle) ===== -->
     <header class="main-header">
       <div class="header-left">
+        <!-- use uploaded image path as the logo per your instruction -->
         <img src="/static/logo.png" alt="DoseBuddy logo" class="logo">
         <div class="brand-text">
           <h1>DoseBuddy</h1>
@@ -210,13 +208,14 @@
       </div>
 
       <div class="header-center" id="greeting">
-        <span class="greeting-title" id="greetingTitle"></span>
-        <span class="greeting-sub" id="greetingSub"></span>
+  <span class="greeting-title" id="greetingTitle"></span>
+  <span class="greeting-sub" id="greetingSub"></span>
 
-        <span class="quote-hero" id="quoteHero"></span>
-        <span class="quote-sub" id="quoteSub"></span>
-        <span class="quote-italic" id="quoteItalic"></span>
-      </div>
+  <span class="quote-hero" id="quoteHero"></span>
+  <span class="quote-sub" id="quoteSub"></span>
+  <span class="quote-italic" id="quoteItalic"></span>
+</div>
+
 
       <div class="header-right">
         <div class="toggle-wrap">
@@ -228,47 +227,18 @@
       </div>
     </header>
 
-  
+    <!-- ===== MAIN GRID ===== -->
     <div class="grid">
       <aside class="panel">
         <h3>Notifications</h3>
-        <div class="small-muted" style="margin-bottom:12px">Status of Current and past notifications</div>
+        <div class="small-muted" style="margin-bottom:12px">Status of Current and past notifications </div>
 
-        
-        {% for m in notifications %}
-        <div class="notification-item" style="display:flex; align-items:flex-start; gap:12px; margin-bottom:12px;">
-          <div class="tick-wrapper" onclick="toggleTaken({{ m.id }}, this)" role="button" aria-pressed="{{ 'true' if m.status=='taken' else 'false' }}">
-            <div class="tick-circle {% if m.status == 'taken' %}checked{% endif %}">
-              <span>{% if m.status == 'taken' %}✓{% endif %}</span>
-            </div>
-          </div>
-
-          <div class="med-info">
-            <h4 style="margin:0">{{ m.name }}</h4>
-            <p style="margin:6px 0 0 0" class="small-muted">{{ m.dosage }} • {{ m.time }} • {{ m.food_type }}</p>
-            {% if m.status == 'delayed' %}
-              <span class="badge delayed">Delayed</span>
-            {% endif %}
-          </div>
-        </div>
-        {% endfor %}
-
-        
         {% for m in medicines %}
         <div class="schedule-item">
           <div class="time-row">
-            
-            <button class="tick-btn {% if m.status == 'taken' %}taken{% elif m.status == 'delayed' %}delayed{% endif %}"
-                    onclick="toggleTaken({{ m.id }})"
-                    id="tick-{{ m.id }}"
-                    data-status="{{ m.status }}">
-              <span class="tick-icon">{% if m.status == 'taken' %}✔{% elif m.status == 'delayed' %}⧗{% endif %}</span>
-            </button>
-
             <div class="time">{{ m.time }}</div>
-            <div class="badge {% if m.status == 'delayed' %}delayed{% endif %}" id="badge-{{ m.id }}">{{ m.status }}</div>
+            <div class="badge">Planned</div>
           </div>
-
           <div style="font-weight:700">{{ m.name }}</div>
           <div class="small-muted">{{ m.dosage }}</div>
         </div>
@@ -283,15 +253,9 @@
         <div class="top-row">
           <div>
             <h2 style="margin:0">My Medications</h2>
-            <div class="small-muted">Manage your upcoming medicines</div>
-
-            {% for m in upcoming %}
-            <div class="upcoming-item" style="margin-top:8px">
-              <h4 style="margin:0">{{ m.name }}</h4>
-              <p style="margin:4px 0 0 0" class="small-muted">{{ m.dosage }} • {{ m.time }} • {{ m.food_type }}</p>
-            </div>
-            {% endfor %}
+            <div class="small-muted">Manage your active medicines</div>
           </div>
+
           <button class="add-btn" id="openAddModal">+ Add Medicine</button>
         </div>
 
@@ -306,10 +270,12 @@
               </div>
 
               <div class="med-actions">
+                <!-- EDIT BUTTON -->
                 <button class="action-btn"
                         onclick="openEditModal({{ m.id }}, '{{ m.name }}', '{{ m.dosage }}', '{{ m.time }}', '{{ m.food_type }}')"
                         title="Edit">✏</button>
 
+                <!-- DELETE BUTTON -->
                 <button class="action-btn" title="Delete"
                         onclick="openDeleteModal({{ m.id }}, '{{ m.name }}')">🗑</button>
               </div>
@@ -317,28 +283,32 @@
           </article>
           {% endfor %}
         </section>
-        
-        
+      </main>
+    </div>
   </div>
 
-  
+  <!-- ======================= ADD MODAL ============================== -->
   <div class="modal-backdrop" id="addModal">
     <div class="modal" role="dialog" aria-modal="true">
       <span class="close-modal" onclick="closeAddModal()">×</span>
       <h2 class="modal-title">Add Medicine</h2>
+
       <form method="POST" action="/add">
         <div class="form-group">
           <label class="label">Medicine Name</label>
           <input class="input" type="text" name="name" required>
         </div>
+
         <div class="form-group">
           <label class="label">Dosage</label>
           <input class="input" type="text" name="dosage" required>
         </div>
+
         <div class="form-group">
           <label class="label">Time</label>
           <input class="input" type="time" name="time" required>
         </div>
+
         <div class="form-group">
           <label class="label">Food Instruction</label>
           <select class="input" name="food">
@@ -346,28 +316,34 @@
             <option value="after">After Food</option>
           </select>
         </div>
+
         <button class="primary-btn" type="submit">Save Medicine</button>
       </form>
     </div>
   </div>
 
+  <!-- ======================= EDIT MODAL ============================== -->
   <div class="modal-backdrop" id="editModal">
     <div class="modal" role="dialog" aria-modal="true">
       <span class="close-modal" onclick="closeEditModal()">×</span>
       <h2 class="modal-title">Edit Medicine</h2>
+
       <form method="POST" id="editForm">
         <div class="form-group">
           <label class="label">Medicine Name</label>
           <input class="input" name="name" id="editName" required>
         </div>
+
         <div class="form-group">
           <label class="label">Dosage</label>
           <input class="input" name="dosage" id="editDosage" required>
         </div>
+
         <div class="form-group">
           <label class="label">Time</label>
           <input class="input" type="time" name="time" id="editTime" required>
         </div>
+
         <div class="form-group">
           <label class="label">Food Instruction</label>
           <select class="input" name="food" id="editFood">
@@ -375,29 +351,32 @@
             <option value="after">After Food</option>
           </select>
         </div>
+
         <button class="primary-btn" type="submit">Update Medicine</button>
       </form>
     </div>
   </div>
 
+  <!-- ======================= DELETE MODAL ============================== -->
   <div class="modal-backdrop" id="deleteModal">
     <div class="modal" role="dialog" aria-modal="true">
       <span class="close-modal" onclick="closeDeleteModal()">×</span>
       <h2 class="modal-title">Delete Medicine</h2>
+
       <p id="deleteDesc" style="margin-bottom:14px; color:var(--muted)"></p>
+
       <form method="POST" id="deleteForm">
         <button class="primary-btn" style="background:#e63946" type="submit">Delete</button>
       </form>
     </div>
   </div>
 
- 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-
   <script>
-
+    /* ================= Greeting (motivational) + rotating quotes (3 unique) ================= */
     function setMotivationalGreetingAndQuotes() {
+      const g = document.getElementById('greeting');
+      const sub = document.getElementById('greetingSub');
+
       const now = new Date();
       const hour = now.getHours();
 
@@ -415,8 +394,10 @@
         subText = "Wind down and remember your evening medicines.";
       }
 
+      // place title as first text node in header center (safe)
       document.getElementById("greetingTitle").innerText = title;
-      document.getElementById("greetingSub").innerText = subText;
+
+      if (sub) sub.innerText = subText;
 
       const quotes = [
         "Your health is your greatest investment.",
@@ -430,13 +411,23 @@
         "Prioritize yourself, one dose at a time.",
         "Good health starts with good routines."
       ];
-      
-      const idx = Math.floor(Math.random() * quotes.length);
-      document.getElementById('quoteHero').innerText = quotes[idx];
+
+      function pickThree(arr) {
+        const copy = arr.slice();
+        const pick = [];
+        for (let i=0;i<3;i++){
+          const idx = Math.floor(Math.random()*copy.length);
+          pick.push(copy.splice(idx,1)[0]);
+        }
+        return pick;
+      }
+      const picked = pickThree(quotes);
+      document.getElementById('quoteHero').innerText = picked[0];
+  
     }
     setMotivationalGreetingAndQuotes();
 
-    
+    /* ================ Theme Toggle (animated sun/moon) ================ */
     const themeSwitch = document.getElementById('themeSwitch');
     const themeIcon = document.getElementById('themeIcon');
 
@@ -461,9 +452,11 @@
       updateThemeIcon(animated);
     }
 
+    // load preference
     const stored = localStorage.getItem('dose_theme');
     applyTheme(stored === 'dark', false);
 
+    // toggle via click/keyboard
     themeSwitch.addEventListener('click', () => {
       const dark = !document.body.classList.contains('dark');
       applyTheme(dark, true);
@@ -476,6 +469,7 @@
       }
     });
 
+    /* ================= MODAL HANDLERS ================= */
     function openAddModal(){ document.getElementById("addModal").style.display="flex"; }
     function closeAddModal(){ document.getElementById("addModal").style.display="none"; }
     document.getElementById("openAddModal").onclick = openAddModal;
@@ -497,12 +491,15 @@
     }
     function closeDeleteModal(){ document.getElementById("deleteModal").style.display="none"; }
 
+    // close modals by clicking backdrop
     window.addEventListener('click', function(e){
       ['addModal','editModal','deleteModal'].forEach(id=>{
         const el = document.getElementById(id);
         if (el && el.style.display === 'flex' && e.target === el) el.style.display = 'none';
       });
     });
+
+    // accessibility: close modals on Escape
     window.addEventListener('keyup', function(e){
       if (e.key === 'Escape') {
         ['addModal','editModal','deleteModal'].forEach(id=>{
@@ -510,146 +507,6 @@
           if (el) el.style.display = 'none';
         });
       }
-    });
-
-  
-    function toggleTaken(id, element) {
-      
-      const isNotification = element && element.classList.contains('tick-wrapper');
-      
-      
-      const tickBtn = document.getElementById(`tick-${id}`);
-      const badge = document.getElementById(`badge-${id}`);
-      
-      
-      if (tickBtn && tickBtn.classList.contains("pending")) return;
-      if (isNotification) {
-        const circle = element.querySelector(".tick-circle");
-        if (circle && circle.classList.contains("pending")) return;
-        circle.classList.add("pending");
-      } else if (tickBtn) {
-        tickBtn.classList.add("pending");
-      }
-
-      fetch(`/mark_taken/${id}`, {
-        method: "POST"
-      })
-      .then(res => {
-        if (!res.ok) throw new Error("Network response not ok");
-        return res.json();
-      })
-      .then(data => {
-        
-        if (isNotification) {
-          const circle = element.querySelector(".tick-circle");
-          const icon = circle.querySelector("span");
-          
-          circle.classList.remove("pending");
-          
-          if (data.status === 'taken') {
-            circle.classList.add("checked");
-            icon.innerText = "✓";
-          } else {
-            circle.classList.remove("checked");
-            icon.innerText = "";
-          }
-        } 
-        
-        else if (tickBtn && badge) {
-          tickBtn.classList.remove("pending");
-          tickBtn.classList.remove("taken", "delayed");
-          
-          if (data.status === 'taken') {
-            tickBtn.classList.add("taken");
-            tickBtn.querySelector('.tick-icon').innerText = "✔";
-            badge.textContent = "taken";
-            badge.classList.remove("delayed");
-          } else if (data.status === 'delayed') {
-            tickBtn.classList.add("delayed");
-            tickBtn.querySelector('.tick-icon').innerText = "⧗";
-            badge.textContent = "delayed";
-            badge.classList.add("delayed");
-          } else {
-            tickBtn.querySelector('.tick-icon').innerText = "";
-            badge.textContent = "not_taken";
-            badge.classList.remove("delayed");
-          }
-        }
-        
-       
-        setTimeout(() => location.reload(), 450);
-      })
-      .catch(err => {
-        console.error(err);
-        if (isNotification) {
-          const circle = element.querySelector(".tick-circle");
-          circle.classList.remove("pending");
-        } else if (tickBtn) {
-          tickBtn.classList.remove("pending");
-        }
-        alert("Could not update status. Try again.");
-      });
-    }
-
-   
-    if (window.Chart && window.ChartDataLabels) {
-      Chart.register(ChartDataLabels);
-    }
-
-   
-    document.addEventListener("DOMContentLoaded", function(){
-      const taken = Number({{ taken_count|default(0) }});
-      const not_taken = Number({{ not_taken_count|default(0) }});
-      const delayed = Number({{ delayed_count|default(0) }});
-      const total = taken + not_taken + delayed;
-
-      const ctx = document.getElementById("statusChart").getContext("2d");
-      const textColor = getComputedStyle(document.body).getPropertyValue("--text").trim() || "#0f1724";
-
-      new Chart(ctx, {
-        type: "pie",
-        data: {
-          labels: ["Taken", "Not Taken", "Delayed"],
-          datasets: [{
-            data: [taken, not_taken, delayed],
-            backgroundColor: ["#4CAF50", "#2463ea", "#ffb703"],
-            hoverOffset: 10,
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          animation: {
-            animateRotate: true,
-            animateScale: true,
-            duration: 900,
-            easing: "easeOutQuart"
-          },
-          plugins: {
-            legend: {
-              position: "bottom",
-              labels: { color: textColor }
-            },
-            datalabels: {
-              color: textColor,
-              font: { weight: "600", size: 12 },
-              formatter: (value) => {
-                if (total === 0) return "0%";
-                return ((value / total) * 100).toFixed(1) + "%";
-              }
-            },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  const label = context.label || '';
-                  const value = context.raw || 0;
-                  return `${label}: ${value}`;
-                }
-              }
-            }
-          }
-        }
-      });
     });
   </script>
 </body>

@@ -1,31 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Medicine Added - MediClock</title>
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Medicine Added</title>
+
+    <style>
+        body {
+            font-family: "Segoe UI", sans-serif;
+            background: #f7f7fb;
+            margin: 0;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+        }
+
+        .success-title {
+            font-size: 2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            color: #2f855a;
+            margin-bottom: 30px;
+        }
+
+        .success-title span {
+            font-size: 2rem;
+        }
+
+        .warning-box {
+            background: #fff7da;
+            border-left: 6px solid #f2b422;
+            padding: 25px;
+            margin: 20px auto;
+            width: 80%;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            text-align: left;
+        }
+
+        .warning-box h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #b7791f;
+        }
+
+        .warning-box ul {
+            margin: 10px 0 0 20px;
+            padding: 0;
+            color: #444;
+        }
+
+        .links {
+            margin-top: 30px;
+        }
+
+        .links a {
+            margin: 0 12px;
+            text-decoration: none;
+            font-weight: 500;
+            color: #3182ce;
+            transition: 0.2s;
+        }
+
+        .links a:hover {
+            color: #225ea8;
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <div class="container" style="text-align:center; padding:50px;">
 
-        <h2>✅ Medicine Added Successfully!</h2>
+<div class="container">
 
-        <!-- Display AI conflict warnings -->
-        {% if warning %}
-            <div style="margin-top:20px; background-color:#fff3cd; color:#856404; padding:15px; border-radius:8px; display:inline-block;">
-                <h4>⚠️ Warnings / Suggestions:</h4>
-                <ul>
-                    {% for w in warning %}
-                        <li>{{ w }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-
-        <div style="margin-top:30px;">
-            <a href="/add" class="btn">Add Another Medicine</a>
-            <a href="/index" class="btn">Go to Dashboard</a>
-        </div>
-
+    <div class="success-title">
+        <span>✅</span> Medicine Added Successfully!
     </div>
+
+    {% if warning %}
+    <div class="warning-box">
+        <h3>⚠️ Warnings / Suggestions:</h3>
+        <ul>
+            {% for w in warning %}
+            <li>{{ w }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <div class="links">
+        <a href="{% url 'add_medicine' %}">Add Another Medicine</a>
+        <a href="{% url 'dashboard' %}">Go to Dashboard</a>
+    </div>
+
+</div>
+
 </body>
 </html>
